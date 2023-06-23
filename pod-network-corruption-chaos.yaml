@@ -4,29 +4,20 @@ metadata:
   name: sock-chaos
   namespace: sock-shop
 spec:
-  engineState: 'active'
+  engineState: "active"
+  annotationCheck: "false"
   appinfo:
+    appkind: "deployment"
     appns: sock-shop
     applabel: 'name=carts-db'
-    appkind: 'deployment'
   chaosServiceAccount: pod-network-corruption-sa
   experiments:
-    - name: pod-network-corruption
-      spec:
-        components:
-          env:
-            # This sockshop demo requires runtime to be containerd
-            - name: CONTAINER_RUNTIME
-              value: 'containerd'
-            # This sockshop demo requires this socket path, and limus expeirments in general will require a socket path to be correctly set if running in containerd runtime  
-            - name: SOCKET_PATH
-              value: '/var/run/containerd/containerd.sock'
-            # For shorter durations, this experiment works best at or near 100% corruption
-            - name: NETWORK_PACKET_CORRUPTION_PERCENTAGE
-              value: '100' # in PERCENTAGE
-            # Number of seconds to run the experiment
-            - name: TOTAL_CHAOS_DURATION
-              value: '120' # in SECONDS
-            # This is the sockshop container we will target for this demo
-            - name: TARGET_CONTAINER
-              value: "carts-db"  
+  - name: pod-network-corruption
+    spec:
+      components:
+        env:
+        # network packet corruption percentage
+        - name: NETWORK_PACKET_CORRUPTION_PERCENTAGE
+          value: '100' #in percentage
+        - name: TOTAL_CHAOS_DURATION
+          value: '60'
